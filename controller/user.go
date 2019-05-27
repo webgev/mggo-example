@@ -8,6 +8,10 @@ func init() {
     mggo.AppendRight("User.Read", mggo.RRightGuest)
     mggo.AppendRight("User.List", mggo.RRightGuest)
 
+    mggo.InitCallback(func() {
+        models := []interface{}{(*mggo.User)(nil), (*mggo.UserPassword)(nil)}
+        mggo.CreateTable(models)
+    })
     /*
     mggo.EventSubscribe("SAP.Auth", func (params interface{}) {
         fmt.Println(params)
