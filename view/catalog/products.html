@@ -1,0 +1,29 @@
+{{define "content"}}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{range .Products}}
+        <tr>
+            <td>{{.ID}}</td>
+            <td>{{.Name}}</td>
+            <td>{{.Price}}</td>
+            <td> 
+                <span onclick="productdelete({{.ID}})">Удалить</span>
+            </td>
+        </tr>
+        {{end}}
+    </tbody>
+</table>
+<script>
+    function productdelete(id) {
+        api("Catalog.Delete", {Product: {"ID": id}})
+    }
+</script>
+{{end}}

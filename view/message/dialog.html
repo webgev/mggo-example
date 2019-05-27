@@ -1,0 +1,43 @@
+{{define "content"}}
+    {{ if .Messages }}
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>UserID</th>
+                <th>ToUserID</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Messages}}
+            <tr>
+                <td>{{.UserID}}</td>
+                <td>{{.ToUserID}}</td>
+                <td>{{.Message}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <div id="message-send">
+        <input type="text" placeholder="message" data-bind="value: message"/>
+        <input type="hidden" data-bind="value: user_id"/>
+        <button data-bind="click: clickHandler">send</button>
+    </div>
+    {{ else }}
+        <p>No message</p>
+    {{ end }}
+    <script>
+        function PersonViewModel() {
+            var self = this;
+            this.message = ko.observable();
+            this.user_id = ko.observable({{.ToUserID}});
+            //this.image = ko.observable();
+            this.clickHandler = function() {
+                api("Message.Send",  ko.toJS(self)).then(res=> location.reload());
+            }
+        };
+        var person = new PersonViewModel();
+        ko.applyBindings(person, document.getElementById("message-send"));
+    </script>
+{{end}}

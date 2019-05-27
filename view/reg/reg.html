@@ -1,0 +1,53 @@
+{{define "content"}}
+<div id="reg-content">
+    
+    <div>
+        <p>Email: <input data-bind="value: email"/></p>
+        <div data-bind="if: emailStageCode">
+            <p>Code: <input type="number" data-bind="value: code"/></p>
+        </div>
+        <p>Name: <input data-bind="value: userName"/></p>
+        <p>Login: <input type="text" data-bind="value: userLogin" /></p>
+        <p>Password: <input type="text" data-bind="value: userPassword" /></p>
+    </div>
+    <input type="submit" title="Go" data-bind="click: clickHandler"/>   
+    
+    <script>
+        function PersonViewModel() {
+            var self = this;
+            this.userName = ko.observable();
+            this.userLogin = ko.observable();
+            this.userPassword = ko.observable();
+            this.email = ko.observable();
+            this.token = "";
+            this.code = ko.observable();
+            this.emailStageCode = ko.observable(false);
+            this.clickHandler = function() {
+                if (!self.emailStageCode()) {
+                    api("Reg.Request", {email: self.email()}).then((res) => {
+                        self.token = res;
+                        self.emailStageCode(true)
+                    }).catch(err => {
+                        alert(err)
+                    });
+                    
+                } else {
+                    api("Reg.Registration", {
+                        Token: self.token,
+                        Code: Number(self.code()),
+                        User: {
+                            Name: self.userName(),
+                            Login: self.userLogin(),
+                            Password: self.userPassword()
+                        }
+                    }).then((res) => {
+                        alert(res)
+                    });
+                }
+            }
+        };
+        var person = new PersonViewModel();
+        ko.applyBindings(person, document.getElementById("reg-content"));
+    </script>
+</div>
+{{end}}

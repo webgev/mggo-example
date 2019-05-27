@@ -1,0 +1,25 @@
+{{define "content"}}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>UserID</th>
+                <th>ToUserID</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{range .Messages}}
+            <tr>
+                <td>{{.UserID}}</td>
+                <td>{{.ToUserID}}</td>
+                <td>{{.Message}}</td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    <script>
+        function sendMessage(user_id, message) {
+            api("Message.Send", {user_id, message})
+        }
+    </script>
+{{end}}

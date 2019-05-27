@@ -1,0 +1,25 @@
+{{define "content"}}
+<div id="auth-content">
+    
+    <div>
+        <p>Login: <input type="text" data-bind="value: Login" /></p>
+        <p>Password: <input type="password" data-bind="value: Password" /></p>
+        <!--<input type="file" data-bind="value: image" id> -->
+    </div>
+    <input type="submit" title="Go" data-bind="click: clickHandler"/>  
+    <script>
+        function PersonViewModel() {
+            var self = this;
+            this.Login = ko.observable();
+            this.Password = ko.observable();
+            //this.image = ko.observable();
+            this.clickHandler = function() {
+                var input = document.querySelector('input[type="file"]')
+                api("Auth.Authenticate", ko.toJS(self)).then(res=> {});
+            }
+        };
+        var person = new PersonViewModel();
+        ko.applyBindings(person, document.getElementById("auth-content"));
+    </script>
+</div>
+{{end}}

@@ -1,0 +1,20 @@
+<div id="userPanel" class="float-right">
+{{if .UserInfo.ID}}
+    <div class="btn btn-primary" data-bind="click: Exit"> Exit </div>
+    <script>
+        var UserInfo = {{.UserInfo}}
+    </script>
+{{else }}
+    <a class="btn btn-primary" href="/auth"> Auth </a>
+    <a class="btn btn-secondary" href="/reg"> Reg </a>
+{{end}}
+</div>
+
+<script>
+var userPanel = {
+    Exit: function () {
+        api("Auth.Exit").then(()=> location.replace("/"))
+    }
+}
+ko.applyBindings(userPanel, document.getElementById("userPanel"));
+</script>

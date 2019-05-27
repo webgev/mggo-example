@@ -1,0 +1,32 @@
+{{define "content"}}
+<div id="catalog-create">
+    <div>
+        <p>Name: <input data-bind="value: name"/></p>
+        <p>Price: <input type="text" data-bind="value: price" /></p>
+        <p>Desctiption: <input type="text" data-bind="value: desctiption" /></p>
+    </div>
+    <input type="submit" title="Go" data-bind="click: clickHandler"/>   
+    
+    <script>
+        function PersonViewModel() {
+            var self = this;
+            this.name = ko.observable();
+            this.price = ko.observable();
+            this.desctiption = ko.observable();
+            this.clickHandler = function() {
+                api("Catalog.Create", {
+                    Product: {
+                        Name: self.name(),
+                        Desctiption: self.desctiption(),
+                        Price: Number(self.price())
+                    }
+                }).then((res) => {
+                    alert(res)
+                });
+            }
+        };
+        var person = new PersonViewModel();
+        ko.applyBindings(person, document.getElementById("catalog-create"));
+    </script>
+</div>
+{{end}}

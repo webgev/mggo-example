@@ -1,0 +1,18 @@
+{{define "content"}}
+<div id="News-update">
+	<input type="text" data-bind="value: Name" placeholder="Name" />
+	<input type="submit" title="Go" data-bind="click: clickHandler"/>  
+</div>
+<script>
+	function NewsUpdate() {
+		var self = this;
+		this.Name = ko.observable({{.News.Name}});
+		this.ID = ko.observable({{.News.ID}});
+		this.clickHandler = function() {
+			api("News.Update", ko.toJS(self)).then(res=> {alert("ok")});
+	    }
+	};
+	var model = new NewsUpdate();
+	ko.applyBindings(model, document.getElementById("News-update"));
+</script>
+{{end}}

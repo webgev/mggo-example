@@ -1,0 +1,18 @@
+{{define "content"}}
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{range .Newss}}
+		<tr>
+			<td>{{.ID}}</td>
+			<td>{{.Name}}</td>
+		</tr>
+		{{end}}
+	</tbody>
+</table>
+{{end}}
