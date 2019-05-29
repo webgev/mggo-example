@@ -30,7 +30,7 @@ type Catalog struct {
     ProductID  int
     CategoryID int
     UserID     int
-    Product    Product
+    Product    Product 
     View       CatalogView
 }
 type Product struct {
@@ -57,8 +57,7 @@ type ProductCat struct {
 }
 
 func (c Catalog) List() (products []Product) {
-    product := c.Product
-    mggo.SQL().Model(product).Select(&products)
+    mggo.SQL().Model(&products).Select()
     return
 }
 func (c Catalog) Read() Product {
