@@ -3,17 +3,13 @@ package main
 import (
     "strings" 
     "github.com/webgev/mggo-example/controller"
-    "os"
     "github.com/webgev/mggo"
     "github.com/go-ini/ini"
-	"path/filepath"
 )
 
 func main() {
-    ex, _ := os.Executable()
-    dir := filepath.Dir(ex)
     temp := mggo.ViewData {
-        DirView: dir + "/view/",
+        DirView: "./view/",
         Template: "_template.html",
         Data: map[string]interface{}{},
     }
