@@ -1,55 +1,70 @@
-package main 
+package main
 
 import (
-    "strings" 
-    "github.com/webgev/mggo-example/controller"
-    "github.com/webgev/mggo"
-    "github.com/go-ini/ini"
+	"net/http"
+	"os"
+	"strings"
+
+	"github.com/go-ini/ini"
+	"github.com/webgev/mggo"
+	"github.com/webgev/mggo-example/controller"
 )
 
-func main() {
-    temp := mggo.ViewData {
-        DirView: "./view/",
-        Template: "_template.html",
-        Data: map[string]interface{}{},
-    }
-   
-    rout := mggo.Router{
-        GetController: getController,
-        ViewData: temp,
-        Menu: getMenu(),
-    }
-    cfg, err := ini.Load("./config.ini")
-    if err != nil {
-        os.Exit(1)
-    }
-    mggo.Run(rout, cfg)
+type hooks struct {
+	mggo.RouterHooks
 }
 
-func getMenu() mggo.Menu{
-    menu := mggo.Menu{}
-    menu.Append("catalog", "Catalog", "/catalog")
-    menu.Append("user", "User", "/user")
-    return menu
+func (h hooks) Before(r *mggo.Router, w http.ResponseWriter, req *http.Request) {
+}
+
+func (h hooks) After(r *mggo.Router, w http.ResponseWriter, req *http.Request) {
+
+}
+
+func main() {
+	temp := mggo.ViewData{
+		DirView:  "./view/",
+		Template: "_template.html",
+		Data:     map[string]interface{}{},
+	}
+
+	rout := mggo.Router{
+		GetController: getController,
+		ViewData:      temp,
+		Menu:          getMenu(),
+		RouterHooks:   hooks{},
+	}
+	cfg, err := ini.Load("./config.ini")
+	if err != nil {
+		os.Exit(1)
+	}
+	mggo.Run(rout, cfg)
+}
+
+func getMenu() mggo.Menu {
+	menu := mggo.Menu{}
+	menu.Append("catalog", "Catalog", "/catalog")
+	menu.Append("user", "User", "/user")
+	return menu
 }
 
 func getController(controllerName string) interface{} {
-    switch strings.ToLower(controllerName) {
-    case "user":
-        return &controller.User{}
-    case "home":
-        return &controller.Home{}
-    case "auth":
-        return &controller.Auth{}
-    case "reg":
-        return &controller.Reg{}
-    case "catalog":
-        return &controller.Catalog{}
-    case "message":
-        return &controller.Message{}
-    case "news":
-        return &controller.News{}
-    }
-    
-    return nil
+	switch strings.ToLower(controllerName) {
+	case "user":
+		return &controller.User{}
+	case "home":
+		return &controller.Home{}
+	case "auth":
+		return &controller.Auth{}
+	case "reg":
+		return &controller.Reg{}
+	case "catalog":
+		return &controller.Catalog{}
+	case "message":
+		return &controller.Message{}
+	case "news":
+		return &controller.News{}
+	}
+
+	return nil
 }
