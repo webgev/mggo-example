@@ -12,7 +12,7 @@ func init() {
 	mggo.InitCallback(func() {
 		models := []interface{}{(*mggo.User)(nil), (*mggo.UserPassword)(nil)}
 		mggo.CreateTable(models)
-		mggo.Cache.AddMethod("User.List", mggo.CacheTypeParams, 60*60*24)
+		mggo.Cache.AddMethod("User.List", mggo.CacheTypeMethodParams, 60*60*24)
 		mggo.Cache.AddMethod("User.Read", mggo.CacheTypeUser, 60*60*24)
 	})
 	/*
@@ -58,8 +58,8 @@ func (u User) Update() int {
 }
 
 func (u User) delCache() {
-	mggo.Cache.ClearMethodCache("User.List")
-	mggo.Cache.ClearMethodCacheByUserID("User.Read", u.ID)
+	mggo.Cache.ClearCacheMethod("User.List")
+	mggo.Cache.ClearCacheMethodByUserID("User.Read", u.ID)
 }
 
 type UserView struct{}
