@@ -21,11 +21,10 @@ func init() {
 }
 
 type Message struct {
-	ID       int         `mapstructure:"id"`
-	UserID   int         `structtomap:"-"`
-	ToUserID int         `mapstructure:"user_id"`
-	Message  string      `mapstructure:"message"`
-	View     MessageView `sql:"-" structtomap:"-"`
+	ID       int    `mapstructure:"id"`
+	UserID   int    `structtomap:"-"`
+	ToUserID int    `mapstructure:"user_id"`
+	Message  string `mapstructure:"message"`
 }
 
 func (c Message) Read() Message {
@@ -79,14 +78,14 @@ func (c Message) Delete() {
 
 type MessageView struct{}
 
-func (v MessageView) Index(data *mggo.ViewData, path []string) {
+func (v Message) IndexView(data *mggo.ViewData, path []string) {
 	data.View = "message/message.html"
 	data.Data["Title"] = "Message"
 	c := Message{}
 	data.Data["Messages"] = c.List()
 }
 
-func (v MessageView) Dialog(data *mggo.ViewData, path []string) {
+func (v Message) DialogView(data *mggo.ViewData, path []string) {
 	if len(path) > 2 {
 		if i, err := strconv.Atoi(path[2]); err == nil {
 			c := Message{ToUserID: i}

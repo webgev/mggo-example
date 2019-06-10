@@ -15,10 +15,14 @@ type hooks struct {
 }
 
 func (h hooks) Before(r *mggo.Router, w http.ResponseWriter, req *http.Request) {
+	/*command := "node ./cli/dist/server.js"
+	parts := strings.Fields(command)
+	data, _ := exec.Command(parts[0], parts[1:]...).Output()
+	output := string(data)
+	r.ViewData.Data["AAA"] = output*/
 }
 
 func (h hooks) After(r *mggo.Router, w http.ResponseWriter, req *http.Request) {
-
 }
 
 func main() {

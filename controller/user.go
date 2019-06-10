@@ -24,8 +24,7 @@ func init() {
 
 type User struct {
 	mggo.User       `mapstructure:",squash"`
-	Password        string   `sql:"-" structtomap:"-"`
-	View            UserView `sql:"-" structtomap:"-"`
+	Password        string `sql:"-" structtomap:"-"`
 	mggo.ListFilter `sql:"-" structtomap:"-" mapstructure:",squash"`
 }
 
@@ -62,9 +61,7 @@ func (u User) delCache() {
 	mggo.Cache.ClearCacheMethodByUserID("User.Read", u.ID)
 }
 
-type UserView struct{}
-
-func (c UserView) Index(data *mggo.ViewData, path []string) {
+func (c User) IndexView(data *mggo.ViewData, path []string) {
 	data.View = "user/user.html"
 	data.Data["Title"] = "User"
 	user := User{}
