@@ -23,16 +23,16 @@ type News struct {
 	Name string
 }
 
-func (c *News) Read() News {
+func (c *News) Read(ctx *mggo.BaseContext) News {
 	mggo.SQL().Select(c)
 	return *c
 }
 
-func (c *News) List() (newss []News) {
+func (c *News) List(ctx *mggo.BaseContext) (newss []News) {
 	mggo.SQL().Model(c).Select(&newss)
 	return
 }
-func (c News) Update() int {
+func (c News) Update(ctx *mggo.BaseContext) int {
 	if c.ID == 0 {
 		mggo.SQL().Insert(&c)
 	} else {
@@ -40,23 +40,23 @@ func (c News) Update() int {
 	}
 	return c.ID
 }
-func (c News) Delete() {
+func (c News) Delete(ctx *mggo.BaseContext) {
 	if c.ID != 0 {
 		mggo.SQL().Delete(&c)
 	}
 }
 
-func (v News) IndexView(data *mggo.ViewData, path []string) {
+func (v News) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "news/news.html"
 	data.Data["Title"] = "News"
-	data.Data["Newss"] = v.List()
+	data.Data["Newss"] = v.List(ctx)
 }
-func (v News) ReadView(data *mggo.ViewData, path []string) {
+func (v News) ReadView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	if len(path) > 2 {
 		if i, err := strconv.Atoi(path[2]); err == nil {
 			data.View = "news/read.html"
 			c := News{ID: i}
-			r := c.Read()
+			r := c.Read(ctx)
 			if r.ID > 0 {
 				data.Data["Title"] = r.Name
 				data.Data["News"] = r
@@ -66,13 +66,13 @@ func (v News) ReadView(data *mggo.ViewData, path []string) {
 	}
 	panic(mggo.ErrorViewNotFound{})
 }
-func (v News) UpdateView(data *mggo.ViewData, path []string) {
+func (v News) UpdateView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "news/update.html"
 	if len(path) > 2 {
 		if i, err := strconv.Atoi(path[2]); err == nil {
 			data.View = "news/update.html"
 			c := News{ID: i}
-			r := c.Read()
+			r := c.Read(ctx)
 			if r.ID == 0 {
 				panic(mggo.ErrorViewNotFound{})
 			}

@@ -56,26 +56,26 @@ type ProductCat struct {
 	CategoryID int
 }
 
-func (c Catalog) List() (products []Product) {
+func (c Catalog) List(ctx *mggo.BaseContext) (products []Product) {
 	mggo.SQL().Model(&products).Select()
 	return
 }
-func (c Catalog) Read() Product {
+func (c Catalog) Read(ctx *mggo.BaseContext) Product {
 	product := Product{ID: c.ProductID}
 	mggo.SQL().Select(&product)
 	return product
 }
 
-func (c Catalog) ListCategory() (categories []Category) {
+func (c Catalog) ListCategory(ctx *mggo.BaseContext) (categories []Category) {
 	mggo.SQL().Model(&Category{}).Select(&categories)
 	return categories
 }
-func (c Catalog) ReadCategory() Category {
+func (c Catalog) ReadCategory(ctx *mggo.BaseContext) Category {
 	category := Category{ID: c.CategoryID}
 	mggo.SQL().Select(&category)
 	return category
 }
-func (c Catalog) BasketList() (baskets []Basket) {
+func (c Catalog) BasketList(ctx *mggo.BaseContext) (baskets []Basket) {
 	basket := Basket{}
 	if c.UserID != 0 {
 		basket.UserID = c.UserID
@@ -84,7 +84,7 @@ func (c Catalog) BasketList() (baskets []Basket) {
 	return
 }
 
-func (c Catalog) Update() int {
+func (c Catalog) Update(ctx *mggo.BaseContext) int {
 	if c.Product.ID == 0 {
 		mggo.SQL().Insert(&c.Product)
 	} else {
@@ -93,18 +93,18 @@ func (c Catalog) Update() int {
 	return c.Product.ID
 }
 
-func (c Catalog) Create() int {
-	return c.Update()
+func (c Catalog) Create(ctx *mggo.BaseContext) int {
+	return c.Update(ctx)
 }
 
-func (c Catalog) Delete() {
+func (c Catalog) Delete(ctx *mggo.BaseContext) {
 	if c.Product.ID != 0 {
 		product := c.Product
 		mggo.SQL().Delete(&product)
 	}
 }
 
-func (p Product) List(catID int) (products []Product) {
+func (p Product) List(ctx *mggo.BaseContext, catID int) (products []Product) {
 	query := mggo.SQL().Model(&p)
 	if catID > 0 {
 		query.Join(`JOIN "product_cats" on "category_id" = ? and "product_id" = id`, catID)
@@ -113,36 +113,36 @@ func (p Product) List(catID int) (products []Product) {
 	return
 }
 
-func (c Category) Read() Category {
+func (c Category) Read(ctx *mggo.BaseContext) Category {
 	if c.ID > 0 {
 		mggo.SQL().Select(&c)
 	}
 	return c
 }
 
-func (c Catalog) IndexView(data *mggo.ViewData, path []string) {
+func (c Catalog) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "catalog/catalog.html"
 	data.Data["Title"] = "Catalog"
-	data.Data["Categories"] = Catalog{}.ListCategory()
+	data.Data["Categories"] = Catalog{}.ListCategory(ctx)
 }
 
-func (c Catalog) CreateView(data *mggo.ViewData, path []string) {
+func (c Catalog) CreateView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "catalog/create.html"
 	data.Data["Title"] = "Catalog"
 	data.Data["Model"] = Product{}
 }
 
-func (c Catalog) ProductsView(data *mggo.ViewData, path []string) {
+func (c Catalog) ProductsView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	var catID int
 	title := "Catalog"
 	if len(path) > 2 {
 		if i, err := strconv.Atoi(path[2]); err == nil {
 			catID = i
-			cat := Category{ID: catID}.Read()
+			cat := Category{ID: catID}.Read(ctx)
 			title = cat.Name
 		}
 	}
 	data.View = "catalog/products.html"
 	data.Data["Title"] = title
-	data.Data["Products"] = Product{}.List(catID)
+	data.Data["Products"] = Product{}.List(ctx, catID)
 }

@@ -16,22 +16,22 @@ type Auth struct {
 }
 
 // Authenticate - Аутентификацировать
-func (a Auth) Authenticate() bool {
-	return mggo.SAP{}.Authenticate(a.Login, a.Password)
+func (a Auth) Authenticate(ctx *mggo.BaseContext) bool {
+	return mggo.SAP{}.Authenticate(ctx, a.Login, a.Password)
 }
 
 // IsAuth - Проверит аутентифицирован ли пользователь
-func (a Auth) IsAuth() bool {
-	return mggo.SAP{}.IsAuth()
+func (a Auth) IsAuth(ctx *mggo.BaseContext) bool {
+	return mggo.SAP{}.IsAuth(ctx)
 }
 
 // Exit - Метод выхода
-func (a Auth) Exit() {
-	mggo.SAP{}.Exit()
+func (a Auth) Exit(ctx *mggo.BaseContext) {
+	mggo.SAP{}.Exit(ctx)
 }
 
 // Index - главная страница
-func (a Auth) IndexView(data *mggo.ViewData, path []string) {
+func (a Auth) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "auth/auth.html"
 	data.Data["Title"] = "Auth"
 }

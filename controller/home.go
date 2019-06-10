@@ -7,9 +7,9 @@ import (
 type Home struct {
 }
 
-func (u Home) IndexView(data *mggo.ViewData, path []string) {
+func (u Home) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "home/home.html"
 	data.Data["Title"] = "Home"
 	user := User{}
-	data.Data["Users"] = user.List()
+	data.Data["Users"] = user.List(ctx)
 }

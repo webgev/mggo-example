@@ -16,7 +16,7 @@ type Reg struct {
 	User
 }
 
-func (r Reg) Request() string {
+func (r Reg) Request(ctx *mggo.BaseContext) string {
 	valid := mggo.Validation{
 		Type:  mggo.ValidationEmailType,
 		Email: r.Email,
@@ -24,7 +24,7 @@ func (r Reg) Request() string {
 	return valid.Create()
 }
 
-func (r Reg) Registration() int {
+func (r Reg) Registration(ctx *mggo.BaseContext) int {
 	valid := mggo.Validation{
 		Type:  mggo.ValidationEmailType,
 		Token: r.Token,
@@ -34,10 +34,10 @@ func (r Reg) Registration() int {
 	if !valid.Verification() {
 		return 0
 	}
-	return r.User.Update()
+	return r.User.Update(ctx)
 }
 
-func (c Reg) IndexView(data *mggo.ViewData, path []string) {
+func (c Reg) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "reg/reg.html"
 	data.Data["Title"] = "Reg"
 }

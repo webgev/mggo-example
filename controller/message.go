@@ -27,31 +27,31 @@ type Message struct {
 	Message  string `mapstructure:"message"`
 }
 
-func (c Message) Read() Message {
+func (c Message) Read(ctx *mggo.BaseContext) Message {
 	mggo.SQL().Select(&c)
 	return c
 }
 
-func (c *Message) Send() {
+func (c *Message) Send(ctx *mggo.BaseContext) {
 	if c.ToUserID == 0 || c.Message == "" {
 		panic(mggo.ErrorInternalServer{"not user or message"})
 	}
 	if c.UserID == 0 {
-		user := mggo.SAP{}.SessionUserID()
+		user := mggo.SAP{}.SessionUserID(ctx)
 		if user == 0 {
 			panic(mggo.ErrorAuthenticate{})
 		}
 		c.UserID = user
 	}
 
-	c.Update()
+	c.Update(ctx)
 	mggo.EventPublish("message.send", mggo.EventTypeClient, []int{c.ToUserID}, c.Message)
 }
 
-func (c Message) List() (messages []Message) {
+func (c Message) List(ctx *mggo.BaseContext) (messages []Message) {
 	m := new(Message)
 	if m.UserID == 0 {
-		m.UserID = mggo.SAP{}.SessionUserID()
+		m.UserID = mggo.SAP{}.SessionUserID(ctx)
 	}
 	query := mggo.SQL().Model(m)
 	query.Where("user_id = ?", m.UserID)
@@ -62,7 +62,7 @@ func (c Message) List() (messages []Message) {
 	return
 }
 
-func (c Message) Update() int {
+func (c Message) Update(ctx *mggo.BaseContext) int {
 	if c.ID == 0 {
 		mggo.SQL().Insert(&c)
 	} else {
@@ -70,7 +70,7 @@ func (c Message) Update() int {
 	}
 	return c.ID
 }
-func (c Message) Delete() {
+func (c Message) Delete(ctx *mggo.BaseContext) {
 	if c.ID != 0 {
 		mggo.SQL().Delete(&c)
 	}
@@ -78,19 +78,19 @@ func (c Message) Delete() {
 
 type MessageView struct{}
 
-func (v Message) IndexView(data *mggo.ViewData, path []string) {
+func (v Message) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "message/message.html"
 	data.Data["Title"] = "Message"
 	c := Message{}
-	data.Data["Messages"] = c.List()
+	data.Data["Messages"] = c.List(ctx)
 }
 
-func (v Message) DialogView(data *mggo.ViewData, path []string) {
+func (v Message) DialogView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	if len(path) > 2 {
 		if i, err := strconv.Atoi(path[2]); err == nil {
 			c := Message{ToUserID: i}
 			data.Data["ToUserID"] = i
-			data.Data["Messages"] = c.List()
+			data.Data["Messages"] = c.List(ctx)
 		}
 	}
 	data.View = "message/dialog.html"

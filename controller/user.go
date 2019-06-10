@@ -28,11 +28,11 @@ type User struct {
 	mggo.ListFilter `sql:"-" structtomap:"-" mapstructure:",squash"`
 }
 
-func (u User) Read() mggo.User {
-	return u.User.Read()
+func (u User) Read(ctx *mggo.BaseContext) mggo.User {
+	return u.User.Read(ctx)
 }
 
-func (u *User) List() (users []User) {
+func (u *User) List(ctx *mggo.BaseContext) (users []User) {
 	query := mggo.SQL().Model(&users)
 	for key, value := range u.Filter {
 		switch key {
@@ -46,8 +46,8 @@ func (u *User) List() (users []User) {
 	return
 }
 
-func (u User) Update() int {
-	res := u.User.Update()
+func (u User) Update(ctx *mggo.BaseContext) int {
+	res := u.User.Update(ctx)
 	if res != 0 && u.Password != "" {
 		u.User.SetPassword(res, u.Password)
 	}
@@ -61,9 +61,9 @@ func (u User) delCache() {
 	mggo.Cache.ClearCacheMethodByUserID("User.Read", u.ID)
 }
 
-func (c User) IndexView(data *mggo.ViewData, path []string) {
+func (c User) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
 	data.View = "user/user.html"
 	data.Data["Title"] = "User"
 	user := User{}
-	data.Data["Users"] = mggo.Invoke(&user, "List")
+	data.Data["Users"] = mggo.Invoke(ctx, &user, "List")
 }
