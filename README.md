@@ -64,6 +64,11 @@ func getController(controllerName string) interface{} {
 }
 ```
 
+## New controller 
+
+```shell
+go run ..\lib\new-controller.go -name=News
+```
 ## Depends
 
 - https://github.com/mitchellh/mapstructure
