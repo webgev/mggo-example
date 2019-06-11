@@ -67,7 +67,7 @@ func (u User) delCache() {
 	mggo.Cache.ClearCacheMethodByUserID("User.Read", u.ID)
 }
 
-func (c User) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (c User) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "user/user.html"
 	data.Data["Title"] = "User"
 	user := User{}

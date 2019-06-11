@@ -84,16 +84,16 @@ func (c Message) Delete(ctx *mggo.BaseContext) {
 
 type MessageView struct{}
 
-func (v Message) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (v Message) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "message/message.html"
 	data.Data["Title"] = "Message"
 	c := Message{}
 	data.Data["Messages"] = c.List(ctx)
 }
 
-func (v Message) DialogView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
-	if len(path) > 2 {
-		if i, err := strconv.Atoi(path[2]); err == nil {
+func (v Message) DialogView(ctx *mggo.BaseContext, data *mggo.ViewData) {
+	if len(ctx.Path) > 2 {
+		if i, err := strconv.Atoi(ctx.Path[2]); err == nil {
 			c := Message{ToUserID: i}
 			data.Data["ToUserID"] = i
 			data.Data["Messages"] = c.List(ctx)

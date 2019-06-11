@@ -37,7 +37,7 @@ func (a Auth) Exit(ctx *mggo.BaseContext) {
 }
 
 // Index - главная страница
-func (a Auth) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (a Auth) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "auth/auth.html"
 	data.Data["Title"] = "Auth"
 }

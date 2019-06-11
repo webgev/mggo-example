@@ -125,23 +125,23 @@ func (c Category) Read(ctx *mggo.BaseContext) Category {
 	return c
 }
 
-func (c Catalog) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (c Catalog) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "catalog/catalog.html"
 	data.Data["Title"] = "Catalog"
 	data.Data["Categories"] = Catalog{}.ListCategory(ctx)
 }
 
-func (c Catalog) CreateView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (c Catalog) CreateView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "catalog/create.html"
 	data.Data["Title"] = "Catalog"
 	data.Data["Model"] = Product{}
 }
 
-func (c Catalog) ProductsView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (c Catalog) ProductsView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	var catID int
 	title := "Catalog"
-	if len(path) > 2 {
-		if i, err := strconv.Atoi(path[2]); err == nil {
+	if len(ctx.Path) > 2 {
+		if i, err := strconv.Atoi(ctx.Path[2]); err == nil {
 			catID = i
 			cat := Category{ID: catID}.Read(ctx)
 			title = cat.Name

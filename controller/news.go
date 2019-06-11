@@ -51,14 +51,14 @@ func (c News) Delete(ctx *mggo.BaseContext) {
 	}
 }
 
-func (v News) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (v News) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "news/news.html"
 	data.Data["Title"] = "News"
 	data.Data["Newss"] = v.List(ctx)
 }
-func (v News) ReadView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
-	if len(path) > 2 {
-		if i, err := strconv.Atoi(path[2]); err == nil {
+func (v News) ReadView(ctx *mggo.BaseContext, data *mggo.ViewData) {
+	if len(ctx.Path) > 2 {
+		if i, err := strconv.Atoi(ctx.Path[2]); err == nil {
 			data.View = "news/read.html"
 			c := News{ID: i}
 			r := c.Read(ctx)
@@ -71,10 +71,10 @@ func (v News) ReadView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string
 	}
 	panic(mggo.ErrorViewNotFound{})
 }
-func (v News) UpdateView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (v News) UpdateView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "news/update.html"
-	if len(path) > 2 {
-		if i, err := strconv.Atoi(path[2]); err == nil {
+	if len(ctx.Path) > 2 {
+		if i, err := strconv.Atoi(ctx.Path[2]); err == nil {
 			data.View = "news/update.html"
 			c := News{ID: i}
 			r := c.Read(ctx)

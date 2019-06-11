@@ -43,7 +43,7 @@ func (r Reg) Registration(ctx *mggo.BaseContext) int {
 	return r.User.Update(ctx)
 }
 
-func (c Reg) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData, path []string) {
+func (c Reg) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "reg/reg.html"
 	data.Data["Title"] = "Reg"
 }
