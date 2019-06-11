@@ -5,8 +5,14 @@ import (
 )
 
 func init() {
+	mggo.RegisterController("reg", NewReg)
+
 	mggo.AppendRight("Reg.Request", mggo.RRightGuest)
 	mggo.AppendRight("Reg.Registration", mggo.RRightGuest)
+}
+
+func NewReg() *Reg {
+	return &Reg{}
 }
 
 type Reg struct {

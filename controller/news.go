@@ -7,6 +7,8 @@ import (
 )
 
 func init() {
+	mggo.RegisterController("news", NewNews)
+
 	mggo.AppendRight("News.Read", mggo.RRightGuest)
 	mggo.AppendRight("News.List", mggo.RRightGuest)
 	mggo.AppendRight("News.Update", mggo.RRightEditor)
@@ -16,6 +18,9 @@ func init() {
 	mggo.InitCallback(func() {
 		mggo.CreateTable([]interface{}{(*News)(nil)})
 	})
+}
+func NewNews() *News {
+	return &News{}
 }
 
 type News struct {

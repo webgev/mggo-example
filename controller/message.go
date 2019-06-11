@@ -7,6 +7,8 @@ import (
 )
 
 func init() {
+	mggo.RegisterController("message", NewMessage)
+
 	mggo.AppendRight("Message.Read", mggo.RRightUser)
 	mggo.AppendRight("Message.List", mggo.RRightUser)
 	mggo.AppendRight("Message.Send", mggo.RRightUser)
@@ -18,6 +20,10 @@ func init() {
 		mggo.CreateTable([]interface{}{(*Message)(nil)})
 	})
 
+}
+
+func NewMessage() *Message {
+	return &Message{}
 }
 
 type Message struct {

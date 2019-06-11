@@ -7,6 +7,8 @@ import (
 )
 
 func init() {
+	mggo.RegisterController("catalog", NewCatalog)
+
 	mggo.AppendRight("Catalog.List", mggo.RRightGuest)
 	mggo.AppendRight("Catalog.ListCategory", mggo.RRightGuest)
 	mggo.AppendRight("Catalog.Read", mggo.RRightGuest)
@@ -25,6 +27,9 @@ func init() {
 		models = append(models, (*ProductCat)(nil))
 		mggo.CreateTable(models)
 	})
+}
+func NewCatalog() *Catalog {
+	return &Catalog{}
 }
 
 type Catalog struct {

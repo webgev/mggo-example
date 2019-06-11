@@ -5,6 +5,8 @@ import (
 )
 
 func init() {
+	mggo.RegisterController("user", NewUser)
+
 	mggo.AppendRight("User.Update", mggo.RRightManager)
 	mggo.AppendRight("User.Read", mggo.RRightGuest)
 	mggo.AppendRight("User.List", mggo.RRightGuest)
@@ -12,20 +14,24 @@ func init() {
 	mggo.InitCallback(func() {
 		models := []interface{}{(*mggo.User)(nil), (*mggo.UserPassword)(nil)}
 		mggo.CreateTable(models)
+		// cache 1 day
 		mggo.Cache.AddMethod("User.List", mggo.CacheTypeMethodParams, 60*60*24)
 		mggo.Cache.AddMethod("User.Read", mggo.CacheTypeUser, 60*60*24)
 	})
 	/*
-	    mggo.EventSubscribe("SAP.Auth", func (params interface{}) {
-	        fmt.Println(params)
-		})*/
-	// cache 1 day
+		mggo.EventSubscribe("SAP.Auth", func (params interface{}) {
+		fmt.Println(params)
+	})*/
 }
 
 type User struct {
 	mggo.User       `mapstructure:",squash"`
 	Password        string `sql:"-" structtomap:"-"`
 	mggo.ListFilter `sql:"-" structtomap:"-" mapstructure:",squash"`
+}
+
+func NewUser() *User {
+	return &User{}
 }
 
 func (u User) Read(ctx *mggo.BaseContext) mggo.User {

@@ -4,6 +4,14 @@ import (
 	"github.com/webgev/mggo"
 )
 
+func init() {
+	mggo.RegisterController("home", NewHome)
+}
+
+func NewHome() *Home {
+	return &Home{}
+}
+
 type Home struct {
 }
 

@@ -5,8 +5,14 @@ import (
 )
 
 func init() {
+	mggo.RegisterController("auth", NewAuth)
+
 	mggo.AppendRight("Auth.Authenticate", mggo.RRightGuest)
 	mggo.AppendRight("Auth.Exit", mggo.RRightGuest)
+}
+
+func NewAuth() *Auth {
+	return &Auth{}
 }
 
 // Auth - Функционал аутентификации
