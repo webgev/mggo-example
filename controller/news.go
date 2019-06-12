@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"strconv"
 
 	"github.com/webgev/mggo"
@@ -99,10 +98,8 @@ func (v News) UpdateView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	}
 }
 func (n News) View(ctx *mggo.BaseContext, data *mggo.ViewData) {
-	fmt.Println(ctx.Path)
 	if len(ctx.Path) > 1 {
 		n.Name = ctx.Path[1]
-		fmt.Println(n.Name)
 		news := n.ReadByName(ctx)
 		if news.ID != 0 {
 			data.View = "news/read.html"
