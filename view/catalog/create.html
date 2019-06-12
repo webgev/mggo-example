@@ -3,7 +3,8 @@
     <div>
         <p>Name: <input data-bind="value: name"/></p>
         <p>Price: <input type="text" data-bind="value: price" /></p>
-        <p>Desctiption: <input type="text" data-bind="value: desctiption" /></p>
+        <p>Description: <input type="text" data-bind="value: description" /></p>
+        <p>Category: <input type="number" data-bind="value: category" /></p>
     </div>
     <input type="submit" title="Go" data-bind="click: clickHandler"/>   
     
@@ -12,12 +13,14 @@
             var self = this;
             this.name = ko.observable();
             this.price = ko.observable();
-            this.desctiption = ko.observable();
+            this.description = ko.observable();
+            this.category = ko.observable();
             this.clickHandler = function() {
                 api("Catalog.Create", {
+                    CategoryID: Number(self.category()),
                     Product: {
                         Name: self.name(),
-                        Desctiption: self.desctiption(),
+                        Description: self.description(),
                         Price: Number(self.price())
                     }
                 }).then((res) => {

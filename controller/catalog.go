@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/webgev/mggo"
@@ -99,7 +100,18 @@ func (c Catalog) Update(ctx *mggo.BaseContext) int {
 }
 
 func (c Catalog) Create(ctx *mggo.BaseContext) int {
-	return c.Update(ctx)
+	id := c.Product.ID
+	productId := c.Update(ctx)
+	// if new product and cat id
+	fmt.Println(id, productId, c.CategoryID)
+	if id == 0 && c.CategoryID != 0 {
+		cat := ProductCat{
+			CategoryID: c.CategoryID,
+			ProductID:  productId,
+		}
+		mggo.SQL().Insert(&cat)
+	}
+	return productId
 }
 
 func (c Catalog) Delete(ctx *mggo.BaseContext) {
@@ -110,11 +122,11 @@ func (c Catalog) Delete(ctx *mggo.BaseContext) {
 }
 
 func (p Product) List(ctx *mggo.BaseContext, catID int) (products []Product) {
-	query := mggo.SQL().Model(&p)
+	query := mggo.SQL().Model(&products)
 	if catID > 0 {
 		query.Join(`JOIN "product_cats" on "category_id" = ? and "product_id" = id`, catID)
 	}
-	query.Select(&products)
+	query.Select()
 	return
 }
 
@@ -145,6 +157,7 @@ func (c Catalog) ProductsView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 			catID = i
 			cat := Category{ID: catID}.Read(ctx)
 			title = cat.Name
+
 		}
 	}
 	data.View = "catalog/products.html"
