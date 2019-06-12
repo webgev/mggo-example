@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/webgev/mggo"
@@ -50,6 +51,12 @@ func (c News) Delete(ctx *mggo.BaseContext) {
 		mggo.SQL().Delete(&c)
 	}
 }
+func (c News) ReadByName(ctx *mggo.BaseContext) News {
+	if c.Name != "" {
+		mggo.SQL().Model(&c).Where("name = ?", c.Name).Select()
+	}
+	return c
+}
 
 func (v News) IndexView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 	data.View = "news/news.html"
@@ -90,4 +97,19 @@ func (v News) UpdateView(ctx *mggo.BaseContext, data *mggo.ViewData) {
 		data.Data["Title"] = "Ceate News"
 		data.Data["News"] = News{}
 	}
+}
+func (n News) View(ctx *mggo.BaseContext, data *mggo.ViewData) {
+	fmt.Println(ctx.Path)
+	if len(ctx.Path) > 1 {
+		n.Name = ctx.Path[1]
+		fmt.Println(n.Name)
+		news := n.ReadByName(ctx)
+		if news.ID != 0 {
+			data.View = "news/read.html"
+			data.Data["Title"] = news.Name
+			data.Data["News"] = news
+			return
+		}
+	}
+	panic(mggo.ErrorViewNotFound{})
 }

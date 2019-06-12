@@ -43,5 +43,6 @@ func getMenu() mggo.Menu {
 	menu := mggo.Menu{}
 	menu.Append("catalog", "Catalog", "/catalog")
 	menu.Append("user", "User", "/user")
+	menu.Append("news", "News", "/news")
 	return menu
 }
