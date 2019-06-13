@@ -2,9 +2,7 @@ package main
 
 import (
 	"net/http"
-	"os"
 
-	"github.com/go-ini/ini"
 	"github.com/webgev/mggo"
 	_ "github.com/webgev/mggo-example/controller"
 )
@@ -32,11 +30,8 @@ func main() {
 		Menu:        getMenu(),
 		RouterHooks: hooks{},
 	}
-	cfg, err := ini.Load("./config.ini")
-	if err != nil {
-		os.Exit(1)
-	}
-	mggo.Run(rout, cfg)
+
+	mggo.Run(rout, "./config.ini")
 }
 
 func getMenu() mggo.Menu {
