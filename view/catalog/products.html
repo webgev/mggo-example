@@ -9,13 +9,15 @@
         </tr>
     </thead>
     <tbody>
+        {{$manager := ge .UserInfo.Right .Rights.Manager}}
+
         {{range .Products}}
         <tr>
             <td>{{.ID}}</td>
             <td>{{.Name}}</td>
             <td>{{.Price}}</td>
             <td> 
-                <span onclick="productdelete({{.ID}})">Удалить</span>
+                {{if $manager}} <span onclick="productdelete({{.ID}})">Удалить</span> {{end}}
             </td>
         </tr>
         {{end}}
