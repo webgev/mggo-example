@@ -22,7 +22,6 @@ func main() {
 	temp := mggo.ViewData{
 		DirView:  "./view/",
 		Template: "_template.html",
-		Data:     map[string]interface{}{},
 	}
 
 	rout := mggo.Router{

@@ -1,0 +1,67 @@
+{{define "content"}}
+    <style>
+        .rows {
+            width: 200px;
+        }
+        .rows >div {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px 10px 0;
+            border: 1px solid #000000;
+            display: inline-block;
+            text-align: center;
+            padding: 13px;
+            overflow: hidden;
+        }
+    </style>
+    <button class="btn btn-primary" id="conn" onclick="connect()">Connect</button>
+    <div id="mess" style="display: none;">
+       
+        <div class="rows" id="rows">
+            <div onclick="step(1, this)"></div>
+            <div onclick="step(2, this)"></div>
+            <div onclick="step(3, this)"></div>
+            <div onclick="step(4, this)"></div>
+            <div onclick="step(5, this)"></div>
+            <div onclick="step(6, this)"></div>
+            <div onclick="step(7, this)"></div>
+            <div onclick="step(8, this)"></div>
+            <div onclick="step(9, this)"></div>
+        </div>
+    </div>
+    <script>
+        var val;
+        var val2;
+        var id;
+        var block = true;
+        subscribe("Tictac.Connect", function(data) {
+            id = data["id"]
+            document.getElementById("mess").style.display = "block";
+            document.getElementById("conn").style.display = "none";
+            if (data["step"] == 1)  {
+                block = false;
+                val = "X";
+                val2 = "Y"
+            } else {
+                val2 = "X";
+                val = "Y";
+            }
+        })
+        subscribe("Tictac.Step", function(data) {
+            block = false;
+            data.Field
+            document.getElementById("rows").children[data.Field - 1].innerHTML = val2
+        })
+        var connect = function () {
+            api("Tictac.Connection", {ID: socketID})
+        } 
+        var step = function (n, self) {
+            if (block) {
+                return
+            }
+            block = true;
+            self.innerHTML = val
+            api("Tictac.Step", {ID: id, Field: n})
+        } 
+    </script>
+{{end}}

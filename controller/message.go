@@ -51,7 +51,7 @@ func (c *Message) Send(ctx *mggo.BaseContext) {
 	}
 
 	c.Update(ctx)
-	mggo.EventPublish("message.send", mggo.EventTypeClient, []int{c.ToUserID}, c.Message)
+	mggo.EventPublish("message.send", mggo.EventTypeClient, []int{c.ToUserID}, mggo.MapStringAny{"message": c.Message})
 }
 
 func (c Message) List(ctx *mggo.BaseContext) (messages []Message) {
